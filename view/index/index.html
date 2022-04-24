@@ -1,0 +1,34 @@
+{{ define "index/index" }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input type="text" name="captcha" placeholder="输入验证码">
+<input type="hidden" name="captcha_id" placeholder="验证码ID" >
+<img src="" alt="" id="captchaimg">
+<button>提交</button>
+</body>
+</html>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script>
+    function getcaptcha(){
+        $.get("/captcha",function (res) {
+            $("#captchaimg").attr("src",res.data)
+            $("input[name='captcha_id']").val(res.captchaId)
+        })
+    }
+    getcaptcha()
+    $("#captchaimg").click(getcaptcha)
+
+    $("button").click(function (){
+        var cptcha = $("input[name='captcha']").val();
+        var cptcha_id = $("input[name='captcha_id']").val();
+        $.post("/verifyCaptcha",{cptcha:cptcha,cptcha_id:cptcha_id},function (res){
+            console.log(res)
+        })
+    })
+</script>
+{{end}}
